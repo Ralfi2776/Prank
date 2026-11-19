@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Breach</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: #020502;
+    color: #00ff66;
+    font-family: monospace;
+    overflow-x: hidden;
+}
+
+canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+section {
+    position: relative;
+    z-index: 1;
+}
+
+.main {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+}
+
+.box {
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+}
+
+.alert {
+    color: #ff2020;
+    font-size: clamp(35px, 8vw, 75px);
+    text-shadow: 0 0 20px red;
+    animation: flicker 1.5s infinite;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+}
+
+.subtitle {
+    color: white;
+    font-size: 20px;
+}
+
+.terminal {
+    background: rgba(0, 20, 0, 0.9);
+    border: 1px solid #00ff66;
+    padding: 20px;
+    text-align: left;
+    margin-top: 30px;
+    box-shadow: 0 0 20px #00ff6633;
+    min-height: 200px;
+}
+
+.line {
+    margin: 12px 0;
+    color: #00ff66;
+}
+
+.red {
+    color: #ff3030;
+}
+
+.progress-container {
+    height: 22px;
+    border: 1px solid #00ff66;
+    margin-top: 25px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    background: #00ff66;
+    box-shadow: 0 0 15px #00ff66;
+    animation: progress 12s linear forwards;
+}
+
+@keyframes progress {
+    to { width: 100%; }
+}
+
+.scroll {
+    color: white;
+    margin-top: 40px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.2; }
+}
+
+.reveal {
+    min-height: 100vh;
+    background: #050505;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+}
+
+.reveal-box {
+    max-width: 800px;
+}
+
+.reveal h1 {
+    font-size: clamp(40px, 10vw, 90px);
+    color: #00ff66;
+    text-shadow: 0 0 25px #00ff66;
+}
+
+.reveal p {
+    color: white;
+    font-size: 22px;
+    line-height: 1.8;
+}
+
+button {
+    padding: 15px 25px;
+    background: #00ff66;
+    color: black;
+    border: none;
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 25px;
+}
+
+button:hover {
+    background: white;
+    box-shadow: 0 0 20px #00ff66;
+}
+
+.small {
+    font-size: 14px !important;
+    color: gray !important;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<section class="main">
+    <div class="box">
+
+        <h1 class="alert">⚠ SYSTEM BREACHED ⚠</h1>
+
+        <p class="subtitle">
+            Unbefugter Zugriff erkannt.
+        </p>
+
+        <div class="terminal" id="terminal">
+            <div class="line">Initializing system...</div>
+            <div class="line">Connecting to remote server...</div>
+            <div class="line red">WARNING: Security breach detected!</div>
+            <div class="line">Analyzing system...</div>
+            <div class="line">Loading simulation...</div>
+            <div class="line">Status: <span class="red">COMPROMISED</span></div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress"></div>
+        </div>
+
+        <p class="scroll">
+            ▼ SCROLLE NACH UNTEN ▼
+        </p>
+
+    </div>
+</section>
+
+<section class="reveal">
+    <div class="reveal-box">
+
+        <h1>HAHA 😂</h1>
+
+        <p style="font-size:30px;color:#00ff66;">
+            DU WURDEST AUSGETRICKST!
+        </p>
+
+        <p>
+            Du dachtest wirklich, du wurdest gehackt?
+            <br><br>
+            Keine Sorge. Es ist nichts passiert.
+            <br>
+            Das Ganze war nur ein Prank.
+        </p>
+
+        <button onclick="window.scrollTo({top:0,behavior:'smooth'})">
+            NOCHMAL REINFALLEN
+        </button>
+
+        <p class="small">
+            100 % Fake · Keine Daten gesammelt · Kein Hack
+        </p>
+
+    </div>
+</section>
+
+<script>
+// Matrix background
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resize();
+window.addEventListener("resize", resize);
+
+const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const fontSize = 14;
+let columns = Math.floor(canvas.width / fontSize);
+let drops = Array(columns).fill(1);
+
+function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00ff66";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+
+        ctx.fillText(
+            text,
+            i * fontSize,
+            drops[i] * fontSize
+        );
+
+        if (drops[i] * fontSize > canvas.height &&
+            Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+
+        drops[i]++;
+    }
+}
+
+setInterval(drawMatrix, 50);
+
+window.addEventListener("resize", () => {
+    columns = Math.floor(canvas.width / fontSize);
+    drops = Array(columns).fill(1);
+});
+</script>
